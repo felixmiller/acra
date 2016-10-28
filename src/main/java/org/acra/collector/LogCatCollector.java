@@ -33,6 +33,7 @@ import org.acra.util.PackageManagerWrapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -71,7 +72,7 @@ final class LogCatCollector extends Collector {
      * report generation time and a bigger footprint on the device data
      * plan consumption.
      */
-    private String collectLogCat(@Nullable String bufferName) {
+    private String collectLogCat(@Nullable String bufferName, @Nullable String[] argumentsOverwrite) {
         final int myPid = android.os.Process.myPid();
         final String myPidStr = config.logcatFilterByPid() && myPid > 0 ? Integer.toString(myPid) + "):" : null;
 
@@ -85,7 +86,13 @@ final class LogCatCollector extends Collector {
         // "-t n" argument has been introduced in FroYo (API level 8). For
         // devices with lower API level, we will have to emulate its job.
         final int tailCount;
-        final List<String> logcatArgumentsList = config.logcatArguments();
+        List<String> logcatArgumentsList = null;
+        if (argumentsOverwrite != null) {
+            logcatArgumentsList = Arrays.asList(argumentsOverwrite);
+        }
+        else {
+            logcatArgumentsList = config.logcatArguments();
+        }
 
         final int tailIndex = logcatArgumentsList.indexOf("-t");
         if (tailIndex > -1 && tailIndex < logcatArgumentsList.size()) {
@@ -137,7 +144,7 @@ final class LogCatCollector extends Collector {
                 bufferName = "radio";
                 break;
         }
-        return collectLogCat(bufferName);
+        return collectLogCat(bufferName,reportBuilder.getLogcatArgs());
     }
 
     /**

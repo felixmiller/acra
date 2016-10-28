@@ -17,6 +17,7 @@ public final class ReportBuilder {
     private Thread uncaughtExceptionThread;
     private Throwable exception;
     private final Map<String, String> customData = new HashMap<String, String>();
+    private String[] logcatArgs;
 
     private boolean sendSilently = false;
     private boolean endApplication = false;
@@ -105,6 +106,16 @@ public final class ReportBuilder {
     @NonNull
     public Map<String, String> getCustomData() {
         return customData;
+    }
+
+    public ReportBuilder customLogcatArguments(String[] logcatArgs) {
+        this.logcatArgs = logcatArgs;
+        return this;
+    }
+
+    @Nullable
+    public String[] getLogcatArgs() {
+        return logcatArgs;
     }
 
     /**

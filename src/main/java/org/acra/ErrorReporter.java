@@ -285,6 +285,15 @@ public class ErrorReporter implements Thread.UncaughtExceptionHandler {
                 .build(reportExecutor);
     }
 
+    public void handleSilentException(@Nullable Throwable e, String[] logcatArgs) {
+        performDeprecatedReportPriming();
+        new ReportBuilder()
+                .exception(e)
+                .sendSilently()
+                .customLogcatArguments(logcatArgs)
+                .build(reportExecutor);
+    }
+
     /**
      * Enable or disable this ErrorReporter. By default it is enabled.
      *
